@@ -21,3 +21,6 @@ Thumbs.db
 
 # Figma 拉取临时数据
 data/
+
+# 本地 SQLite 演示数据库
+/storage/*.sqlite

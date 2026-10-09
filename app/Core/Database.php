@@ -26,6 +26,36 @@ class Database
 
     private function connect(): PDO
     {
+        $driver = $this->config['driver'] ?? 'mysql';
+
+        if ($driver === 'sqlite') {
+            $path = $this->config['path'] ?? ($this->config['database'] ?? ':memory:');
+            $dsn  = 'sqlite:' . $path;
+            $pdo  = new PDO($dsn, null, null, [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+                PDO::ATTR_STRINGIFY_FETCHES  => false,
+            ]);
+            // 兼容 MySQL 的 DATE_FORMAT，便于在不安装数据库的情况下运行
+            $pdo->sqliteCreateFunction('DATE_FORMAT', static function ($date, $format) {
+                if ($date === null) {
+                    return null;
+                }
+                try {
+                    $dt = new DateTime((string)$date);
+                } catch (\Throwable $e) {
+                    return null;
+                }
+                $php = strtr((string)$format, [
+                    '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd', '%H' => 'H',
+                    '%i' => 'i', '%s' => 's', '%M' => 'F', '%W' => 'l', '%T' => 'H:i:s',
+                ]);
+                return $dt->format($php);
+            }, 2);
+            return $pdo;
+        }
+
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
             $this->config['host'],

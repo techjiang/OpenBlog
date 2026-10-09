@@ -154,12 +154,13 @@ class Router
         }
 
         if (is_string($action)) {
-            $class = $namespace . $action;
+            [$ctrlName, $ctrlMethod] = array_pad(explode('@', $action, 2), 2, 'handle');
+            $class = rtrim($namespace, '\\') . '\\' . $ctrlName;
             if (!class_exists($class)) {
                 throw new \RuntimeException("控制器不存在：{$class}");
             }
             $controller = new $class();
-            echo $this->invoke([$controller, 'handle'], $params);
+            echo $this->invoke([$controller, $ctrlMethod], $params);
             return;
         }
 
