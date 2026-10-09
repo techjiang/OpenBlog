@@ -54,7 +54,7 @@
           </article>
         <?php endforeach; ?>
       </div>
-      <?= $paginator?->render() ?? '' ?>
+      <?= $paginator !== null ? $paginator->render() : '' ?>
     <?php endif; ?>
   </div>
 

@@ -6,7 +6,7 @@
  * @var \App\Core\Paginator|null $paginator
  * @var array|null $hero
  */
-$totalPosts = $paginator?->total ?? count($posts);
+$totalPosts = ($paginator !== null ? $paginator->total : count($posts));
 $defaultHeroImage = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&q=80';
 ?>
 <section class="hero">
@@ -114,6 +114,6 @@ $defaultHeroImage = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w
       <?php endforeach; ?>
     </div>
 
-    <?= $paginator?->render() ?? '' ?>
+    <?= $paginator !== null ? $paginator->render() : '' ?>
   <?php endif; ?>
 </section>
