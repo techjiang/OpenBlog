@@ -1,12 +1,13 @@
 <?php
 /**
- * OpenBlog - 首页
+ * OpenBlog - 首页（Figma 风格：Hero + 三列文章卡片网格）
  *
  * @var array $posts
  * @var \App\Core\Paginator|null $paginator
  * @var array|null $hero
  */
 $totalPosts = $paginator?->total ?? count($posts);
+$defaultHeroImage = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&q=80';
 ?>
 <section class="hero">
   <div class="container">
@@ -25,10 +26,8 @@ $totalPosts = $paginator?->total ?? count($posts);
           <a class="btn btn--ghost" href="<?= e(url('feed.xml')) ?>">订阅 RSS</a>
         </div>
       </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="orb orb--1"></div>
-        <div class="orb orb--2"></div>
-        <div class="orb orb--3"></div>
+      <div class="hero-art">
+        <img src="<?= e($defaultHeroImage) ?>" alt="" loading="eager">
       </div>
     </div>
   </div>
@@ -47,7 +46,7 @@ $totalPosts = $paginator?->total ?? count($posts);
     <div class="featured-body">
       <span class="tag-pill">精选</span>
       <h2><?= e($hero['title']) ?></h2>
-      <p><?= e(str_limit((string)($hero['excerpt'] ?? ''), 120)) ?></p>
+      <p><?= e(str_limit((string)($hero['excerpt'] ?? ''), 130)) ?></p>
       <div class="card-meta">
         <span><?= e($hero['author_name'] ?? $hero['author_username'] ?? '匿名') ?></span>
         <span>·</span>
@@ -60,22 +59,20 @@ $totalPosts = $paginator?->total ?? count($posts);
 </section>
 <?php endif; ?>
 
-<section class="container main-layout">
-  <div class="content-column">
-    <div class="section-head">
-      <h2>最新文章</h2>
-      <?php if (($page ?? 1) > 1): ?><span class="section-sub">第 <?= (int)$page ?> 页</span><?php endif; ?>
+<section class="container">
+  <div class="section-head">
+    <h2>最新文章</h2>
+    <?php if (($page ?? 1) > 1): ?><span class="section-sub">第 <?= (int)$page ?> 页</span><?php endif; ?>
+  </div>
+
+  <?php if ($posts === []): ?>
+    <div class="empty-state">
+      <h3>还没有文章</h3>
+      <p>前往后台创建第一篇文章吧。</p>
+      <a class="btn btn--primary" href="<?= e(url('admin/posts/create')) ?>">写文章</a>
     </div>
-
-    <?php if ($posts === []): ?>
-      <div class="empty-state">
-        <h3>还没有文章</h3>
-        <p>前往后台创建第一篇文章吧。</p>
-        <a class="btn btn--primary" href="<?= e(url('admin/posts/create')) ?>">写文章</a>
-      </div>
-    <?php endif; ?>
-
-    <div class="post-list">
+  <?php else: ?>
+    <div class="post-grid">
       <?php foreach ($posts as $post): ?>
         <article class="post-card">
           <a class="post-card__cover" href="<?= e(url('post/' . $post['slug'])) ?>" aria-hidden="true" tabindex="-1">
@@ -88,7 +85,7 @@ $totalPosts = $paginator?->total ?? count($posts);
           <div class="post-card__body">
             <div class="post-card__top">
               <?php if (!empty($post['category_name'])): ?>
-                <a class="chip chip--cat" style="--chip:<?= e($post['category_color'] ?: '#4f46e5') ?>"
+                <a class="chip chip--cat" style="--chip:<?= e($post['category_color'] ?: '#8b7bff') ?>"
                    href="<?= e(url('category/' . $post['category_slug'])) ?>"><?= e($post['category_name']) ?></a>
               <?php endif; ?>
               <time datetime="<?= e((string)$post['published_at']) ?>"><?= e(human_date($post['published_at'])) ?></time>
@@ -98,7 +95,7 @@ $totalPosts = $paginator?->total ?? count($posts);
               <a href="<?= e(url('post/' . $post['slug'])) ?>"><?= e($post['title']) ?></a>
             </h3>
 
-            <p class="post-card__excerpt"><?= e(str_limit((string)($post['excerpt'] ?? ''), 110)) ?></p>
+            <p class="post-card__excerpt"><?= e(str_limit((string)($post['excerpt'] ?? ''), 100)) ?></p>
 
             <div class="post-card__foot">
               <span class="author">
@@ -111,8 +108,6 @@ $totalPosts = $paginator?->total ?? count($posts);
               </span>
               <span class="dot">·</span>
               <span><?= (int)$post['reading_time'] ?> 分钟</span>
-              <span class="dot">·</span>
-              <span><?= number_short((int)$post['view_count']) ?> 阅读</span>
             </div>
           </div>
         </article>
@@ -120,12 +115,5 @@ $totalPosts = $paginator?->total ?? count($posts);
     </div>
 
     <?= $paginator?->render() ?? '' ?>
-  </div>
-
-  <?= partial('partials/sidebar', [
-      'categories' => $categories ?? [],
-      'tags'       => $tags ?? [],
-      'popular'    => $popular ?? [],
-      'latest'     => $latest ?? [],
-  ]) ?>
+  <?php endif; ?>
 </section>

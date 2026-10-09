@@ -97,32 +97,37 @@ $flashError   = \App\Core\Session::getFlash('error');
 </aside>
 
 <div class="admin-main">
-  <header class="admin-topbar">
-    <button class="icon-btn admin-burger" id="adminBurger" type="button" aria-label="菜单">
-      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-    </button>
+<header class="admin-topbar">
+  <button class="icon-btn admin-burger" id="adminBurger" type="button" aria-label="菜单">
+    <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
 
-    <div class="admin-topbar__title"><?= e($title) ?></div>
+  <div class="admin-topbar__title"><?= e($title) ?></div>
 
-    <div class="admin-topbar__actions">
-      <a class="btn btn--primary btn--sm" href="<?= e(url('admin/posts/create')) ?>">
-        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> 写文章
-      </a>
+  <form class="topbar-search" action="<?= e(url('admin/posts')) ?>" method="get" role="search" style="margin-left:auto;margin-right:16px;max-width:320px;">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input type="search" name="q" placeholder="搜索文章…" aria-label="搜索文章" value="<?= e((string)($_GET['q'] ?? '')) ?>">
+  </form>
 
-      <div class="admin-user" id="adminUserMenu">
-        <button class="admin-user__btn" type="button">
-          <span class="avatar-fallback"><?= e(mb_substr((string)($user['display_name'] ?: $user['username'] ?? 'A'), 0, 1)) ?></span>
-          <span class="admin-user__name"><?= e($user['display_name'] ?: $user['username'] ?? '') ?></span>
-          <svg viewBox="0 0 24 24" class="caret"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="admin-dropdown">
-          <a href="<?= e(url('admin/profile')) ?>">个人资料</a>
-          <a href="<?= e(url('admin/settings')) ?>">站点设置</a>
-          <a href="<?= e(url('admin/logout')) ?>" class="is-danger">退出登录</a>
-        </div>
+  <div class="admin-topbar__actions">
+    <a class="btn btn--primary btn--sm" href="<?= e(url('admin/posts/create')) ?>">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> 写文章
+    </a>
+
+    <div class="admin-user" id="adminUserMenu">
+      <button class="admin-user__btn" type="button">
+        <span class="avatar-fallback"><?= e(mb_substr((string)($user['display_name'] ?: $user['username'] ?? 'A'), 0, 1)) ?></span>
+        <span class="admin-user__name"><?= e($user['display_name'] ?: $user['username'] ?? '') ?></span>
+        <svg viewBox="0 0 24 24" class="caret"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="admin-dropdown">
+        <a href="<?= e(url('/')) ?>" target="_blank">查看站点</a>
+        <a href="<?= e(url('admin/settings')) ?>">站点设置</a>
+        <a href="<?= e(url('admin/logout')) ?>" class="is-danger">退出登录</a>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
   <div class="admin-content">
     <?php if ($flashSuccess): ?><div class="flash flash--success"><?= e($flashSuccess) ?></div><?php endif; ?>

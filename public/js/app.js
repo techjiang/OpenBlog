@@ -7,21 +7,31 @@
   var doc = document;
 
   /* ---------- 主题切换 ---------- */
-  var toggle = doc.getElementById('themeToggle');
-  if (toggle) {
-    toggle.addEventListener('click', function () {
-      var next = doc.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      doc.documentElement.setAttribute('data-theme', next);
-      try { localStorage.setItem('ob-theme', next); } catch (e) {}
-    });
+  function bindThemeToggle(id) {
+    var toggle = doc.getElementById(id);
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        var next = doc.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('ob-theme', next); } catch (e) {}
+      });
+    }
   }
+  bindThemeToggle('themeToggle');
+  bindThemeToggle('themeToggleTop');
 
-  /* ---------- 移动端菜单 ---------- */
-  var navToggle = doc.getElementById('navToggle');
-  var nav = doc.getElementById('mainNav');
-  if (navToggle && nav) {
-    navToggle.addEventListener('click', function () {
-      nav.classList.toggle('is-open');
+  /* ---------- 移动端侧边栏 ---------- */
+  var burger = doc.getElementById('appBurger');
+  var sidebar = doc.getElementById('appSidebar');
+  if (burger && sidebar) {
+    burger.addEventListener('click', function () {
+      sidebar.classList.toggle('is-open');
+    });
+    doc.addEventListener('click', function (e) {
+      if (window.innerWidth > 1024) return;
+      if (!sidebar.contains(e.target) && !burger.contains(e.target)) {
+        sidebar.classList.remove('is-open');
+      }
     });
   }
 
@@ -136,10 +146,10 @@
   }
 
   /* ---------- 顶栏阴影 ---------- */
-  var header = doc.getElementById('siteHeader');
-  if (header) {
+  var topbar = doc.querySelector('.app-topbar');
+  if (topbar) {
     var onScroll = function () {
-      header.style.boxShadow = window.scrollY > 8 ? 'var(--shadow-sm)' : 'none';
+      topbar.style.boxShadow = window.scrollY > 8 ? '0 1px 0 var(--border)' : 'none';
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
