@@ -6,6 +6,19 @@
 
   var doc = document;
 
+  /* ---------- 主题切换 ---------- */
+  function bindThemeToggle(id) {
+    var toggle = doc.getElementById(id);
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        var next = doc.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        doc.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('ob-theme', next); } catch (e) {}
+      });
+    }
+  }
+  bindThemeToggle('themeToggle');
+
   function csrf() {
     var el = doc.querySelector('meta[name="csrf-token"]');
     return el ? el.getAttribute('content') : '';

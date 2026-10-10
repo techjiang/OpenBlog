@@ -44,7 +44,7 @@ if (!function_exists('asset')) {
     {
         $file = BASE_PATH . '/public/' . ltrim($path, '/');
         $version = is_file($file) ? substr(md5((string)filemtime($file)), 0, 8) : '1';
-        return url('assets/' . ltrim($path, '/')) . '?v=' . $version;
+        return url(ltrim($path, '/')) . '?v=' . $version;
     }
 }
 

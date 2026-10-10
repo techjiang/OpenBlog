@@ -128,7 +128,7 @@ class Router
 
         $pattern = preg_replace_callback(
             '#\{(\w+)(?::([^}]+))?\}#',
-            static fn (array $m): string => '(?P<' . $m[1] . '>' . ($m[2] !== '' ? $m[2] : '[^/]+') . ')',
+            static fn (array $m): string => '(?P<' . $m[1] . '>' . ($m[2] ?? '[^/]+') . ')',
             $routeUri
         );
         $pattern = '#^' . str_replace('#', '\#', $pattern) . '$#';
