@@ -54,7 +54,9 @@ final class App
 
     private function loadConfig(): void
     {
-        $configFile = BASE_PATH . '/app/config.php';
+        $configFile = is_file(BASE_PATH . '/app/config.dev.php')
+            ? BASE_PATH . '/app/config.dev.php'
+            : BASE_PATH . '/app/config.php';
         if (!is_file($configFile)) {
             throw new \RuntimeException('缺少配置文件 app/config.php');
         }

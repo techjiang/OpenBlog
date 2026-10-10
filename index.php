@@ -59,7 +59,10 @@ if (str_starts_with($relative, '/assets/')) {
 /* ------------------------------------------------------------------
  * 安装检查
  * ------------------------------------------------------------------ */
-$config = require BASE_PATH . '/app/config.php';
+$configFile = is_file(BASE_PATH . '/app/config.dev.php')
+    ? BASE_PATH . '/app/config.dev.php'
+    : BASE_PATH . '/app/config.php';
+$config = require $configFile;
 
 if (!($config['installed'] ?? false)) {
     header('Location: ' . ($scriptDir === '' ? '' : $scriptDir) . '/install/');

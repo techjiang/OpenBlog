@@ -3,14 +3,16 @@
  * OpenBlog - 本地 SQLite 演示数据生成器
  *
  * 用法：php tools/seed_sqlite.php
- * 需先在 app/config.php 的 db 段设置：
- *   'driver' => 'sqlite',
- *   'path'   => __DIR__ . '/../storage/openblog.sqlite',
+ * 会优先读取 app/config.dev.php（SQLite 演示配置），
+ * 若不存在则读取 app/config.php，请确保 db.driver 为 'sqlite'。
  */
 
 declare(strict_types=1);
 
-$config = require __DIR__ . '/../app/config.php';
+$configFile = is_file(__DIR__ . '/../app/config.dev.php')
+    ? __DIR__ . '/../app/config.dev.php'
+    : __DIR__ . '/../app/config.php';
+$config = require $configFile;
 $dbCfg  = $config['db'] ?? [];
 if (($dbCfg['driver'] ?? 'mysql') !== 'sqlite') {
     fwrite(STDERR, "请在 app/config.php 中将 db.driver 设为 'sqlite' 后运行。\n");
